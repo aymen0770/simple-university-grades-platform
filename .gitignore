@@ -1,0 +1,32 @@
+node_modules/
+.env
+.env.*
+!.env.example
+dist/
+coverage/
+artifacts/
+cache/
+.DS_Store
+
+# Local database files
+backend/data/*.sqlite
+backend/data/*.sqlite-shm
+backend/data/*.sqlite-wal
+
+# Dependencies
+node_modules/
+backend/node_modules/
+frontend/node_modules/
+blockchain/node_modules/
+
+# Hardhat generated files
+blockchain/artifacts/
+blockchain/cache/
+
+# Environment secrets
+.env
+.env.*
+!.env.example
+backend/.env
+frontend/.env
+blockchain/.env
