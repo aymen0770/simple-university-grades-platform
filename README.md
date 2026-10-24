@@ -1,110 +1,175 @@
-# University Grades Platform (starter MVP)
+# Simple University Grades Platform
 
-Arabic-first web app starter for university grade management.
+**A simple project for blockchain development and testing.**
 
-## Architecture
-- `frontend/`: React + Vite user interface.
-- `backend/`: Express REST API, SQLite, JWT authentication and role checks.
-- `blockchain/`: Hardhat + Solidity audit contract.
-- **Personal grades stay in SQLite.** The blockchain receives only a randomised SHA-256 audit commitment, never student names, IDs, course names, or numeric grades.
-- The backend is a learning starter, not production-ready. Before real student data: use HTTPS, secure secrets, backups, rate limiting, audit monitoring, institutional approval, and a security review.
+## About the Project
 
-## Requirements
-- Node.js 20+ (Node 22 LTS recommended)
-- npm
-- VS Code (recommended)
+This project is a development and testing environment for exploring blockchain integration in a university grades management application.
 
-## 1) Start the backend
-Open a terminal in `backend/`:
+It combines a web frontend, a backend API, an SQLite database, and a Solidity smart contract developed using Hardhat.
+
+The main goal is to experiment with recording and tracking grade-related audit events on a local blockchain.
+
+## Technologies
+
+- React and Vite
+- Node.js and Express
+- SQLite
+- Solidity
+- Hardhat
+- Ethers.js
+
+## Project Structure
+
+- `frontend/` — Web interface
+- `backend/` — API and database
+- `blockchain/` — Smart contracts, deployment scripts, and tests
+
+## Getting Started
+
+### 1. Install dependencies
+
+Install dependencies inside each project directory:
+
 ```bash
-cp .env.example .env
+cd backend
 npm install
-npm run dev
-```
-On Windows PowerShell, copy the file with:
-```powershell
-Copy-Item .env.example .env
-```
-Default demo admin: `admin@university.local` / `ChangeMe123!`
-Change `JWT_SECRET` and `ADMIN_PASSWORD` in `.env` before use. The demo admin is created on first startup.
 
-Backend listens at `http://localhost:4000`.
-
-## 2) Start the frontend
-Open a second terminal in `frontend/`:
-```bash
+cd ../frontend
 npm install
-npm run dev
+
+cd ../blockchain
+npm install
 ```
-Open the Vite URL shown, normally `http://localhost:5173`.
 
-## 3) Demo workflow
-1. Log in as the admin.
-2. Create a teacher and a student from the account management form.
-3. Create a course.
-4. Assign the teacher and enroll the student using the API examples below.
-5. Log in as the teacher and enter a grade. Log in as the student to view their own grades.
+### 2. Start the local blockchain
 
-### API helpers (use an API client such as curl or Postman)
-First login to get a token:
-```bash
-curl -X POST http://localhost:4000/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"email":"admin@university.local","password":"ChangeMe123!"}'
-```
-Copy the `token` from the response and set `TOKEN` in the following examples.
-
-Create users (admin only):
-```bash
-curl -X POST http://localhost:4000/api/admin/users \
-  -H "Authorization: Bearer TOKEN" -H "Content-Type: application/json" \
-  -d '{"name":"Teacher One","email":"teacher@university.local","password":"Teacher123!","role":"teacher"}'
-
-curl -X POST http://localhost:4000/api/admin/users \
-  -H "Authorization: Bearer TOKEN" -H "Content-Type: application/json" \
-  -d '{"name":"Student One","email":"student@university.local","password":"Student123!","role":"student","studentNumber":"ST-001"}'
-```
-Create a course:
-```bash
-curl -X POST http://localhost:4000/api/admin/courses \
-  -H "Authorization: Bearer TOKEN" -H "Content-Type: application/json" \
-  -d '{"code":"CS101","name":"Introduction to Computing","semester":"2026-Fall"}'
-```
-The response contains a course `id`. Assign teacher and enroll student:
-```bash
-curl -X POST http://localhost:4000/api/admin/courses/COURSE_ID/teachers \
-  -H "Authorization: Bearer TOKEN" -H "Content-Type: application/json" \
-  -d '{"teacherId":2}'
-
-curl -X POST http://localhost:4000/api/admin/courses/COURSE_ID/students \
-  -H "Authorization: Bearer TOKEN" -H "Content-Type: application/json" \
-  -d '{"studentId":3}'
-```
-Replace `COURSE_ID`, `teacherId`, and `studentId` with actual IDs from the API responses. Admin IDs can differ if you've already created users.
-
-## 4) Local Hardhat audit contract (optional)
-In a third terminal:
 ```bash
 cd blockchain
-npm install
-npx hardhat test
 npx hardhat node
 ```
-In another terminal, deploy to the local node:
+
+### 3. Compile and deploy the smart contract
+
+In another terminal:
+
 ```bash
 cd blockchain
+npx hardhat compile
 npx hardhat run scripts/deploy.js --network localhost
 ```
-Copy the printed contract address to `backend/.env` as `AUDIT_CONTRACT_ADDRESS`. Add the first Hardhat account private key as `AUDIT_PRIVATE_KEY` (local development only). Restart the backend.
-The backend will submit a salted hash to the local chain when a teacher creates a grade. If blockchain settings are absent, the grade is still saved in SQLite and the audit transaction is skipped.
 
-**Never use the sample Hardhat private key or local chain for real funds or production.** Never expose `AUDIT_PRIVATE_KEY` in the frontend.
+Configure the backend environment variables using `backend/.env.example` and the contract address printed by the deployment script.
 
-## Roles
-- `admin`: creates accounts/courses and assigns teachers/students.
-- `teacher`: can enter grades only for courses assigned to them.
-- `student`: can only read their own grades.
-- No public self-registration.
+### 4. Start the backend and frontend
 
-## Important limitations
-This starter intentionally does not include password reset, email verification, MFA, university SSO, grade appeals, or production deployment. It uses a local SQLite database for development. Have your institution review privacy and academic policy before real deployment.
+In separate terminals:
+
+```bash
+cd backend
+npm run dev
+```
+
+```bash
+cd frontend
+npm run dev
+```
+
+Open the frontend URL displayed by Vite, usually `http://localhost:5173`.
+
+## Notes
+
+- This project is intended for local development and blockchain testing.
+- The local Hardhat blockchain resets when its node is restarted.
+
+---
+
+# منصة بسيطة لإدارة درجات الجامعة
+
+**مشروع بسيط لتطوير واختبار تقنيات البلوكشين.**
+
+## حول المشروع
+
+يهدف هذا المشروع إلى تجربة دمج تقنية البلوكشين مع تطبيق لإدارة درجات الجامعة.
+
+يتكون من واجهة ويب، وخادم خلفي، وقاعدة بيانات SQLite، وعقد ذكي مكتوب بلغة Solidity باستخدام Hardhat.
+
+الهدف الأساسي هو اختبار تسجيل وتتبع أحداث تدقيق الدرجات على شبكة بلوكشين محلية.
+
+## التقنيات المستخدمة
+
+- React وVite للواجهة الأمامية
+- Node.js وExpress للخادم الخلفي
+- SQLite لقاعدة البيانات
+- Solidity لكتابة العقود الذكية
+- Hardhat لتطوير واختبار البلوكشين
+- Ethers.js للتفاعل مع شبكة البلوكشين
+
+## بنية المشروع
+
+- `frontend/` — واجهة المستخدم
+- `backend/` — الخادم الخلفي وقاعدة البيانات
+- `blockchain/` — العقود الذكية وسكربتات النشر والاختبارات
+
+## طريقة التشغيل
+
+### 1. تثبيت المكتبات
+
+نفّذ الأوامر التالية داخل مجلد المشروع الرئيسي:
+
+```bash
+cd backend
+npm install
+
+cd ../frontend
+npm install
+
+cd ../blockchain
+npm install
+```
+
+### 2. تشغيل شبكة البلوكشين المحلية
+
+```bash
+cd blockchain
+npx hardhat node
+```
+
+اترك هذه النافذة مفتوحة.
+
+### 3. ترجمة العقد الذكي ونشره
+
+افتح نافذة أخرى ونفّذ:
+
+```bash
+cd blockchain
+npx hardhat compile
+npx hardhat run scripts/deploy.js --network localhost
+```
+
+اضبط متغيرات البيئة في `backend/.env` بالاعتماد على `backend/.env.example`، وأضف عنوان العقد الذكي الناتج عن النشر.
+
+### 4. تشغيل الخادم والواجهة
+
+في نافذتين منفصلتين:
+
+```bash
+cd backend
+npm run dev
+```
+
+وفي النافذة الأخرى:
+
+```bash
+cd frontend
+npm run dev
+```
+
+افتح رابط الواجهة الذي يظهر في الطرفية، وغالبًا يكون:
+
+`http://localhost:5173`
+
+## ملاحظات
+
+- المشروع مخصص للتطوير المحلي وتجارب البلوكشين.
+- عند إعادة تشغيل شبكة Hardhat المحلية، تُمسح حالتها السابقة، ويجب نشر العقد الذكي من جديد.
